@@ -209,3 +209,19 @@ def hourly_labs_etl(raw_labs):
                         'abnorm_inr')].\
                     set_index('icustay_id').groupby(level=0).apply(sum)
     return first_24_labs_agg
+
+
+def plot_feature_importance(model):
+    plt.rcParams["figure.figsize"] = (6,4)
+    indices = np.argsort(model.feature_importances_)
+    #indices = indices[-17:]
+
+    column_names = [X.columns[i] for i in indices]
+    n_features = X.iloc[:, indices].shape[1]
+    plt.figure()
+    plt.title("Final Model Feature Importance")
+    plt.xlabel("Feature")
+    plt.ylabel("Feature Importance")
+    plt.barh(range(n_features), model.feature_importances_[indices])
+    plt.yticks(range(n_features), column_names)
+    plt.show()
